@@ -54,31 +54,23 @@
             border-radius: 10px;
             margin: 10px 0;
         }
-        .meme-form {
+        .game {
             margin-top: 30px;
         }
-        .meme-form input, .meme-form button {
-            display: block;
-            margin: 15px auto;
-            padding: 10px;
+        .game button {
+            display: inline-block;
+            margin: 15px;
+            padding: 10px 20px;
             font-size: 1.1em;
-        }
-        .meme-form input {
-            width: 80%;
-            max-width: 400px;
-        }
-        .meme-form button {
             background-color: #2c3e50;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
         }
-        canvas {
-            display: block;
-            margin: 30px auto;
-            border: 5px solid #2c3e50;
-            border-radius: 10px;
+        .game-results {
+            margin-top: 20px;
+            font-size: 1.2em;
         }
         footer {
             background: #2c3e50;
@@ -98,8 +90,8 @@
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
-                <li><a href="#create">Create Meme</a></li>
                 <li><a href="#gallery">Meme Gallery</a></li>
+                <li><a href="#game">Play Game</a></li>
             </ul>
         </nav>
     </header>
@@ -107,23 +99,9 @@
     <div class="container" id="home">
         <h2>Featured Memes</h2>
         <div class="featured-memes">
-            <img src="images/Default_Create_an_image_of_Snoopsuke_a_samurai_inspired_by_Sno_2.jpg" alt="Snoopsuke Meme 1">
+            <img src="https://via.placeholder.com/400x300.png?text=Snoopsuke+Meme+1" alt="Snoopsuke Meme 1">
             <img src="https://via.placeholder.com/400x300.png?text=Snoopsuke+Meme+2" alt="Snoopsuke Meme 2">
         </div>
-    </div>
-
-    <div class="container" id="create">
-        <h2>Create Your Own Meme</h2>
-        <form class="meme-form">
-            <label for="meme-image">Upload Image:</label>
-            <input type="file" id="meme-image" accept="image/*" required>
-            <label for="meme-text-top">Top Text:</label>
-            <input type="text" id="meme-text-top" placeholder="Enter top text" required>
-            <label for="meme-text-bottom">Bottom Text:</label>
-            <input type="text" id="meme-text-bottom" placeholder="Enter bottom text" required>
-            <button type="button" onclick="generateMeme()">Create Meme</button>
-        </form>
-        <canvas id="meme-canvas" width="400" height="400"></canvas>
     </div>
 
     <div class="container" id="gallery">
@@ -134,40 +112,37 @@
         </div>
     </div>
 
+    <div class="container" id="game">
+        <h2>Rock, Paper, Scissors</h2>
+        <div class="game">
+            <button onclick="playGame('rock')">Rock</button>
+            <button onclick="playGame('paper')">Paper</button>
+            <button onclick="playGame('scissors')">Scissors</button>
+        </div>
+        <div class="game-results" id="results"></div>
+    </div>
+
     <footer>
         <p>&copy; 2024 Snoopsuke Meme Zone. All rights reserved.</p>
     </footer>
 
     <script>
-        function generateMeme() {
-            const canvas = document.getElementById('meme-canvas');
-            const ctx = canvas.getContext('2d');
-            const imageInput = document.getElementById('meme-image').files[0];
-            const topText = document.getElementById('meme-text-top').value;
-            const bottomText = document.getElementById('meme-text-bottom').value;
-            
-            if (imageInput) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        ctx.drawImage(img, 0, 0);
-                        ctx.font = '30px Impact';
-                        ctx.fillStyle = 'white';
-                        ctx.strokeStyle = 'black';
-                        ctx.lineWidth = 2;
-                        ctx.textAlign = 'center';
-                        ctx.fillText(topText, canvas.width / 2, 50);
-                        ctx.strokeText(topText, canvas.width / 2, 50);
-                        ctx.fillText(bottomText, canvas.width / 2, canvas.height - 20);
-                        ctx.strokeText(bottomText, canvas.width / 2, canvas.height - 20);
-                    };
-                    img.src = event.target.result;
-                };
-                reader.readAsDataURL(imageInput);
+        function playGame(userChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = '';
+
+            if (userChoice === computerChoice) {
+                result = "It's a tie!";
+            } else if ((userChoice === 'rock' && computerChoice === 'scissors') ||
+                       (userChoice === 'paper' && computerChoice === 'rock') ||
+                       (userChoice === 'scissors' && computerChoice === 'paper')) {
+                result = 'You win!';
+            } else {
+                result = 'You lose!';
             }
+
+            document.getElementById('results').innerText = `You chose ${userChoice}, computer chose ${computerChoice}. ${result}`;
         }
     </script>
 </body>
